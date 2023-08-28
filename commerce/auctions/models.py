@@ -6,13 +6,13 @@ class User(AbstractUser):
     pass
 
 
-class AuctionListings(models.Model):
+class AuctionListing(models.Model):
     pass
 
 
-class Bids(models.Model):
+class Bid(models.Model):
     pass
 
 
-class Comments(models.Model):
+class Comment(models.Model):
     pass
