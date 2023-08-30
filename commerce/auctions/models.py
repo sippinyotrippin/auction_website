@@ -32,3 +32,7 @@ class Bid(models.Model):
 
 class Comment(models.Model):
     pass
+
+
+class Watchlist(models.Model):
+    your_listing = models.ForeignKey(Listing, on_delete=models.CASCADE, blank=True, related_name="yolisting")

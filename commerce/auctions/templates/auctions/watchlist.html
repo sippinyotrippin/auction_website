@@ -6,4 +6,10 @@
 
 {% block body %}
     <h1>Watchlist</h1>
+    {% if user.is_authenticated %}
+        ...
+    {% else %}
+        ...
+    {% endif %}
+
 {% endblock %}
