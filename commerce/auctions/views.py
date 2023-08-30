@@ -71,10 +71,27 @@ def create(request):
             'categories': Category.objects.all()
         })
     else:
-        pass
+        title = request.POST['title']
+        description = request.POST['description']
+        price = request.POST['price']
+        image_url = request.POST['image_url']
+        category_name = request.POST['category']
+
+        new_listing = Listing(
+            title=title,
+            description=description,
+            current_price=float(price),
+            image_URL=image_url,
+            is_active=True,
+            owner=request.user,
+            category=Category.objects.get(category_name=category_name),
+        )
+        new_listing.save()
+        return HttpResponseRedirect(reverse("index"))
 
 
-def listing_info(request, listing_id):
-    return render(request, "auctions/listing_page", {
-        "title": Listing.objects.get(id=listing_id).title,
+def listing_page(request, listing_id):
+    listing = Listing.objects.get(id=listing_id)
+    return render(request, "auctions/listing_page.html", {
+        "item": listing
     })

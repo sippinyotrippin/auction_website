@@ -1,9 +1,27 @@
 {% extends "auctions/layout.html" %}
 
-{% title body%}
+{% block title %}
     {{ title }}
 {% endblock %}
 
 {% block body %}
-    <h1>{{ title }}</h1>
+    <h2>Listing: {{ item.title }}</h2>
+    <br>
+    <img class="image_on_listing_page" src="{{ item.image_URL }}">
+    <h6>{{ item.description }}</h6>
+    <br>
+    <h2><strong>${{ item.current_price }}</strong></h2>
+    <form>
+        <div class="mb-3">
+            <div id="emailHelp" class="form-text">2 bid(s) so far. Your bid is the current bid.</div>
+            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Bid">
+        </div>
+        <button type="submit" class="btn btn-primary">Place Bid</button>
+    </form>
+    <br>
+    <h2>Details</h2>
+        <ul>
+            <li>Listed by: {{ item.owner }}</li>
+            <li>Category: {{ item.category }}</li>
+        </ul>
 {% endblock %}

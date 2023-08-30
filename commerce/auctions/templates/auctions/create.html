@@ -6,7 +6,8 @@
 
 {% block body %}
     <h1>Create New Listing</h1>
-    <form action="{% url 'index' %}" method="POST">
+    <form action="{% url 'create' %}" method="POST">
+        {% csrf_token %}
         <label>Title:</label>
         <input name="title" type="text">
         <br/>
@@ -21,7 +22,7 @@
         <input name="image_url" type="text" placeholder="Paste Image Link Here...">
         <br/>
         <label>Category:</label>
-            <select>
+            <select name="category">
             {% for category in categories %}
                 <option>{{ category }}</option>
             {% endfor %}
