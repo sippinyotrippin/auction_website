@@ -26,13 +26,14 @@ class Listing(models.Model):
         return self.title
 
 
+class Watchlist(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, blank=True, related_name="wished_listing")
+
+
 class Bid(models.Model):
     pass
 
 
 class Comment(models.Model):
     pass
-
-
-class Watchlist(models.Model):
-    your_listing = models.ForeignKey(Listing, on_delete=models.CASCADE, blank=True, related_name="yolisting")
