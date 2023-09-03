@@ -27,8 +27,11 @@ class Listing(models.Model):
 
 
 class Watchlist(models.Model):
-    user = models.OneToOneField(User, blank=True, on_delete=models.CASCADE, related_name="watchlist_user")
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="watchlist_user")
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, blank=True, related_name="wished_listing")
+
+    def __str__(self):
+        return f"{self.user}s Watchlist"
 
 
 class Bid(models.Model):
