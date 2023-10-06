@@ -99,3 +99,11 @@ def listing_page(request, listing_id):
 
 def watchlist(request):
     return render(request, "auctions/watchlist.html")
+
+
+def add_to_watchlist(request):
+    pass
+
+
+def remove_from_watchlist(request):
+    pass
