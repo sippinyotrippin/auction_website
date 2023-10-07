@@ -6,5 +6,22 @@
 
 {% block body %}
     <h1>Watchlist</h1>
-        Your Watchlist Is Blank Yet...
+        {% for listing in listings %}
+        <div class="card mb-3" style="max-width: 1910px;">
+            <div class="row g-0">
+                <div class="col-md-4">
+                    <img src="{{ listing.image_URL }}" class="img-fluid rounded-start" alt="...">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title"><a href="{% url 'page' listing.id %}"><strong>{{ listing.title }}</strong></a></h5>
+                        <h5><strong>Price:</strong> ${{ listing.current_price }}</h5>
+                        <p class="card-text">{{ listing.description }}</p>
+                        <p class="card-text"><small class="text-body-secondary">Last updated yesterday</small></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
 {% endblock %}

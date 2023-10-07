@@ -1,0 +1,14 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Choose category</h2>
+    <form action="{% url 'sort_by_categories' %}" method="GET">
+        <select class="form-select form-select-lg mb-3" aria-label="Large select example"  name="category">
+            {% for category in categories %}
+                <option>{{ category }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-warning" style="margin-left: 5px">Select</button>
+
+    </form>
+{% endblock %}

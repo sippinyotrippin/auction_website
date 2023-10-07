@@ -7,9 +7,17 @@
 {% block body %}
     <h2>Listing: {{ item.title }}</h2>
     {% if user.is_authenticated %}
-        <form>
-            <button type="submit">Add To Watchlist</button>
-        </form>
+        {% if is_in_watchlist %}
+            <form action="{% url 'remove_from_watchlist' item.id %}" method="POST">
+                {% csrf_token %}
+                <input type="submit" class="btn btn-danger" value="Remove From Watchlist">
+            </form>
+        {% else %}
+            <form action="{% url 'add_to_watchlist' item.id %}" method="POST">
+                {% csrf_token %}
+                <input type="submit" class="btn btn-success" value="Add To Watchlist">
+            </form>
+        {% endif %}
     {% endif %}
     <br>
     <img class="image_on_listing_page" src="{{ item.image_URL }}">

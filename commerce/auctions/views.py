@@ -3,6 +3,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from datetime import datetime
 
 from .models import *
 
@@ -92,18 +93,44 @@ def create(request):
 
 def listing_page(request, listing_id):
     listing = Listing.objects.get(id=listing_id)
+    is_in_watchlist = request.user in listing.watchlist.all()
     return render(request, "auctions/listing_page.html", {
-        "item": listing
+        "item": listing,
+        "is_in_watchlist": is_in_watchlist
     })
 
 
 def watchlist(request):
-    return render(request, "auctions/watchlist.html")
+    current_user = request.user
+    listings = current_user.user_watchlist.all()
+    return render(request, "auctions/watchlist.html", {
+       "listings": listings
+    })
 
 
-def add_to_watchlist(request):
-    pass
+def add_to_watchlist(request, listing_id):
+    current_listing = Listing.objects.get(pk=listing_id)
+    current_user = request.user
+    current_listing.watchlist.add(current_user)
+    return HttpResponseRedirect(reverse("watchlist"))
 
 
-def remove_from_watchlist(request):
-    pass
+def remove_from_watchlist(request, listing_id):
+    current_listing = Listing.objects.get(pk=listing_id)
+    current_user = request.user
+    current_listing.watchlist.remove(current_user)
+    return HttpResponseRedirect(reverse("index"))
+
+
+def categories(request):
+    return render(request, "auctions/categories.html", {
+        "categories": Category.objects.all()
+    })
+
+
+def index_sorted_by_categories(request):
+    if request.method == "GET":
+        selected_category = request.GET["category"]
+    return render(request, "auctions/index.html", {
+        "listings": Listing.objects.filter(category=selected_category)
+    })
