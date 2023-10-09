@@ -86,6 +86,7 @@ def create(request):
             is_active=True,
             owner=request.user,
             category=Category.objects.get(category_name=category_name),
+            create_datetime=datetime.now()
         )
         new_listing.save()
         return HttpResponseRedirect(reverse("index"))
@@ -94,9 +95,11 @@ def create(request):
 def listing_page(request, listing_id):
     listing = Listing.objects.get(id=listing_id)
     is_in_watchlist = request.user in listing.watchlist.all()
+    is_it_owner = request.user == listing.owner or request.user.is_superuser
     return render(request, "auctions/listing_page.html", {
         "item": listing,
-        "is_in_watchlist": is_in_watchlist
+        "is_in_watchlist": is_in_watchlist,
+        "is_it_owner": is_it_owner
     })
 
 
@@ -131,6 +134,39 @@ def categories(request):
 def index_sorted_by_categories(request):
     if request.method == "GET":
         selected_category = request.GET["category"]
+        category_id = Category.objects.get(category_name=selected_category).id
     return render(request, "auctions/index.html", {
-        "listings": Listing.objects.filter(category=selected_category)
+        "listings": Listing.objects.filter(category=category_id)
     })
+
+
+def edit_listing(request):
+    current_id = request.GET.get('id_')
+    title = request.GET.get('title_')
+    description = request.GET.get('description_')
+    image = request.GET.get('image_')
+    price = request.GET.get('price_')
+    return render(request, "auctions/edit_listing.html", {
+        "listing_id": current_id,
+        "title": title,
+        "description": description,
+        "image": image,
+        "price": price,
+        "categories": Category.objects.all()
+    })
+
+
+def save_editing(request, listing_id):
+    new_title = request.POST.get('title')
+    new_description = request.POST.get('description')
+    new_image = request.POST.get('image_url')
+    new_price = request.POST.get('price')
+
+    changes = (new_title, new_description, new_image, new_price)
+
+    Listing.objects.filter(pk=listing_id).update(title=new_title)
+    Listing.objects.filter(pk=listing_id).update(description=new_description)
+    Listing.objects.filter(pk=listing_id).update(image_URL=new_image)
+    Listing.objects.filter(pk=listing_id).update(current_price=new_price)
+    Listing.objects.filter(pk=listing_id).update(create_datetime=datetime.now())
+    return HttpResponseRedirect(reverse("page", args=(listing_id, )))

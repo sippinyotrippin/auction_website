@@ -24,6 +24,18 @@
     <h6>{{ item.description }}</h6>
     <br>
     <h2><strong>${{ item.current_price }}</strong></h2>
+
+    {% if is_it_owner %}
+        <form action="{% url 'edit_listing' %}" method="GET">
+            <input type="hidden" name="title_" value="{{ item.title }}">
+            <input type="hidden" name="description_" value="{{ item.description }}">
+            <input type="hidden" name="image_" value="{{ item.image_URL }}">
+            <input type="hidden" name="price_" value="{{ item.current_price }}">
+            <input type="hidden" name="id_" value="{{ item.id }}">
+            <button type="submit" class="btn btn-secondary">Edit</button>
+        </form>
+    {% endif %}
+
     <form>
         <div class="mb-3">
             <div id="emailHelp" class="form-text">2 bid(s) so far. Your bid is the current bid.</div>

@@ -17,7 +17,7 @@
                         <h5 class="card-title"><a href="{% url 'page' listing.id %}"><strong>{{ listing.title }}</strong></a></h5>
                         <h5><strong>Price:</strong> ${{ listing.current_price }}</h5>
                         <p class="card-text">{{ listing.description }}</p>
-                        <p class="card-text"><small class="text-body-secondary">Last updated yesterday</small></p>
+                        <p class="card-text"><small class="text-body-secondary">Last updated {{ listing.create_datetime }}</small></p>
                     </div>
                 </div>
             </div>

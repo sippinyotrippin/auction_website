@@ -1,0 +1,33 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}
+    Edit Listing
+{% endblock %}
+
+{% block body %}
+    <h1>Edit Listing</h1>
+    <form action="{% url 'save_editing' listing_id %}" method="POST">
+        {% csrf_token %}
+        <label>Title:</label>
+        <input name="title" type="text" value="{{ title }}">
+        <br/>
+        <label>Description:</label>
+        <br/>
+        <textarea name="description" class="content">{{ description }}</textarea>
+        <br/>
+        <label>Starting Bid:</label>
+        <input name="price" type="number" value="{{ price }}">
+        <br/>
+        <label>Image:</label>
+        <input name="image_url" type="text" value="{{ image }}" placeholder="Paste Image Link Here...">
+        <br/>
+        <label>Category:</label>
+            <select name="category">
+            {% for category in categories %}
+                <option>{{ category }}</option>
+            {% endfor %}
+            </select>
+        <br/>
+        <input type="submit" value="Save" class="btn btn-primary">
+    </form>
+{% endblock %}
