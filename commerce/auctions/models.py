@@ -35,7 +35,7 @@ class Bid(models.Model):
     price = models.FloatField()
 
     def __str__(self):
-        return str(self.price)
+        return f"{self.item}: {self.price}$"
 
 
 class Comment(models.Model):

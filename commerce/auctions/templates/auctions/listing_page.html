@@ -51,12 +51,14 @@
             <li>Category: {{ item.category }}</li>
         </ul>
     <h2>Comments</h2>
-    <form action="{% url 'add_comment' item.id %}" method="POST">
-        {% csrf_token %}
-        <label>Add Comment:</label>
-        <input type="text" name="content" placeholder="Enter...">
-        <input type="submit" class="btn btn-warning" value="Add">
-    </form>
+    {% if user.is_authenticated %}
+        <form action="{% url 'add_comment' item.id %}" method="POST">
+            {% csrf_token %}
+            <label>Add Comment:</label>
+            <input type="text" name="content" placeholder="Enter...">
+            <input type="submit" class="btn btn-warning" value="Add">
+        </form>
+    {% endif %}
     <br>
     <input type="submit" class="btn btn-danger" value="Close Auction">
 {% endblock %}

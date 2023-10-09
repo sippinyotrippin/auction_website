@@ -100,7 +100,7 @@ def listing_page(request, listing_id):
         "is_in_watchlist": is_in_watchlist,
         "is_it_owner": is_it_owner,
         "bid_message": "",
-        "bids_amount": len(Bid.objects.all())
+        "bids_amount": len(Bid.objects.filter(item=listing_id))
     })
 
 
@@ -194,7 +194,7 @@ def place_bid(request, listing_id):
             "is_in_watchlist": is_in_watchlist,
             "is_it_owner": is_it_owner,
             "bid_message": message,
-            "bids_amount": len(Bid.objects.all()),
+            "bids_amount": len(Bid.objects.filter(item=listing_id)),
         })
 
 
