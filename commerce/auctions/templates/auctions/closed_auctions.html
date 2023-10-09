@@ -1,9 +1,9 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
+    <h2>Auctions You Won!</h2>
 
-    {% for listing in listings %}
+    {% for your_listing in closed_listings %}
         <div class="card mb-3" style="max-width: 1910px;">
             <div class="row g-0">
                 <div class="col-md-4">

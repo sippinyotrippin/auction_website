@@ -214,3 +214,7 @@ def close_auction(request, listing_id):
     is_owner = listing.owner == request.user
     if is_owner:
         listing.update(is_active=False)
+        a = WonAuctions(
+            user=request.user,
+            listing=listing
+        )
