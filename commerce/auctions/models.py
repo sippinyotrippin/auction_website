@@ -17,7 +17,7 @@ class Listing(models.Model):
     title = models.CharField(max_length=64)
     description = models.CharField(max_length=200)
     current_price = models.FloatField()
-    image_URL = models.CharField(max_length=1000, blank=True)
+    image_URL = models.CharField(max_length=1000)
     is_active = models.BooleanField(default=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, related_name="user")
     category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, related_name="category")
@@ -29,7 +29,9 @@ class Listing(models.Model):
 
 
 class Bid(models.Model):
-    pass
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    item = models.ForeignKey(Listing, on_delete=models.CASCADE, null=True)
+    price = models.FloatField()
 
 
 class Comment(models.Model):
