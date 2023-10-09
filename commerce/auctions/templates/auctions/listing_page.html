@@ -36,12 +36,13 @@
         </form>
     {% endif %}
 
-    <form>
+    <form action="{% url 'place_bid' item.id %}" method="POST">
+        {% csrf_token %}
         <div class="mb-3">
-            <div id="emailHelp" class="form-text">2 bid(s) so far. Your bid is the current bid.</div>
-            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Bid">
+            <div id="emailHelp" class="form-text">{{ bids_amount }} bid(s) so far. Your bid is the current bid.</div>
+            <input type="text" name="bid" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Bid">
         </div>
-        <button type="submit" class="btn btn-primary">Place Bid</button>
+        <input type="submit" class="btn btn-primary" value="Place Bid">
     </form>
     <br>
     <h2>Details</h2>
@@ -49,4 +50,13 @@
             <li>Listed by: {{ item.owner }}</li>
             <li>Category: {{ item.category }}</li>
         </ul>
+    <h2>Comments</h2>
+    <form action="{% url 'add_comment' item.id %}" method="POST">
+        {% csrf_token %}
+        <label>Add Comment:</label>
+        <input type="text" name="content" placeholder="Enter...">
+        <input type="submit" class="btn btn-warning" value="Add">
+    </form>
+    <br>
+    <input type="submit" class="btn btn-danger" value="Close Auction">
 {% endblock %}

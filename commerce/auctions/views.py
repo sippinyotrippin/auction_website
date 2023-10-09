@@ -3,7 +3,6 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from datetime import datetime
 
 from .models import *
 
@@ -99,7 +98,9 @@ def listing_page(request, listing_id):
     return render(request, "auctions/listing_page.html", {
         "item": listing,
         "is_in_watchlist": is_in_watchlist,
-        "is_it_owner": is_it_owner
+        "is_it_owner": is_it_owner,
+        "bid_message": "",
+        "bids_amount": len(Bid.objects.all())
     })
 
 
@@ -170,3 +171,39 @@ def save_editing(request, listing_id):
     Listing.objects.filter(pk=listing_id).update(current_price=new_price)
     Listing.objects.filter(pk=listing_id).update(create_datetime=datetime.now())
     return HttpResponseRedirect(reverse("page", args=(listing_id, )))
+
+
+def place_bid(request, listing_id):
+    suggested_price = int(request.POST.get('bid'))
+    listing = Listing.objects.get(pk=listing_id)
+    is_in_watchlist = request.user in listing.watchlist.all()
+    is_it_owner = request.user == listing.owner or request.user.is_superuser
+    if suggested_price > listing.current_price:
+        your_bid = Bid(
+            user=request.user,
+            item=Listing.objects.get(pk=listing_id),
+            price=suggested_price
+        )
+        your_bid.save()
+        Listing.objects.filter(pk=listing_id).update(current_price=your_bid.price)
+        return HttpResponseRedirect(reverse("page", args=(listing_id, )))
+    else:
+        message = "Your bid must be larger than the current price"
+        return render(request, "auctions/listing_page.html", {
+            "item": listing,
+            "is_in_watchlist": is_in_watchlist,
+            "is_it_owner": is_it_owner,
+            "bid_message": message,
+            "bids_amount": len(Bid.objects.all()),
+        })
+
+
+def add_comment(request, listing_id):
+    your_comment = Comment(
+        user=request.user,
+        item=Listing.objects.get(pk=listing_id),
+        content=request.POST.get('content'),
+        posting_time=datetime.now()
+    )
+    your_comment.save()
+    return HttpResponseRedirect(reverse('page', args=(listing_id, )))
