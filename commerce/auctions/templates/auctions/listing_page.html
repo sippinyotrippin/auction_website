@@ -60,5 +60,8 @@
         </form>
     {% endif %}
     <br>
-    <input type="submit" class="btn btn-danger" value="Close Auction">
+    <form action="{% url 'close' item.id %}" method="POST">
+        {% csrf_token %}
+        <input type="submit" class="btn btn-danger" value="Close Auction">
+    </form>
 {% endblock %}

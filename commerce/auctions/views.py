@@ -207,3 +207,10 @@ def add_comment(request, listing_id):
     )
     your_comment.save()
     return HttpResponseRedirect(reverse('page', args=(listing_id, )))
+
+
+def close_auction(request, listing_id):
+    listing = Listing.objects.get(pk=listing_id)
+    is_owner = listing.owner == request.user
+    if is_owner:
+        listing.update(is_active=False)

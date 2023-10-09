@@ -46,3 +46,8 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"{self.user} on {self.item}"
+
+
+class WonAuctions(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE)
