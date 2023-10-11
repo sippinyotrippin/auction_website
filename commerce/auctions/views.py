@@ -100,7 +100,8 @@ def listing_page(request, listing_id):
         "is_in_watchlist": is_in_watchlist,
         "is_it_owner": is_it_owner,
         "bid_message": "",
-        "bids_amount": len(Bid.objects.filter(item=listing_id))
+        "bids_amount": len(Bid.objects.filter(item=listing_id)),
+        'is_owner_to_close': request.user == listing.owner
     })
 
 
@@ -210,11 +211,8 @@ def add_comment(request, listing_id):
 
 
 def close_auction(request, listing_id):
-    listing = Listing.objects.get(pk=listing_id)
-    is_owner = listing.owner == request.user
-    if is_owner:
-        listing.update(is_active=False)
-        a = WonAuctions(
-            user=request.user,
-            listing=listing
-        )
+    bid_info = Bid.objects.filter(item=listing_id)
+    best_bid = bid_info[len(bid_info)-1]
+    winner = best_bid.user
+    listing = Listing.objects.filter(pk=listing_id).update(is_active=False)
+    listing.watchlist.clear()

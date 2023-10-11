@@ -60,8 +60,10 @@
         </form>
     {% endif %}
     <br>
-    <form action="{% url 'close' item.id %}" method="POST">
-        {% csrf_token %}
-        <input type="submit" class="btn btn-danger" value="Close Auction">
-    </form>
+    {% if is_owner_to_close %}
+        <form action="{% url 'close' item.id %}" method="POST">
+            {% csrf_token %}
+            <input type="submit" class="btn btn-danger" value="Close Auction">
+        </form>
+    {% endif %}
 {% endblock %}
