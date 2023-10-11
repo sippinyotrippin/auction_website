@@ -214,5 +214,9 @@ def close_auction(request, listing_id):
     bid_info = Bid.objects.filter(item=listing_id)
     best_bid = bid_info[len(bid_info)-1]
     winner = best_bid.user
-    listing = Listing.objects.filter(pk=listing_id).update(is_active=False)
-    listing.watchlist.clear()
+    listing = Listing.objects.filter(pk=listing_id)
+    listing.update(winner=winner.id)
+    listing.update(is_active=False)
+    Listing.objects.get(pk=listing_id).watchlist.clear()
+    return HttpResponseRedirect(reverse("index"))
+
