@@ -101,7 +101,8 @@ def listing_page(request, listing_id):
         "is_it_owner": is_it_owner,
         "bid_message": "",
         "bids_amount": len(Bid.objects.filter(item=listing_id)),
-        'is_owner_to_close': request.user == listing.owner
+        'is_owner_to_close': request.user == listing.owner,
+        "message": ""
     })
 
 
@@ -175,27 +176,41 @@ def save_editing(request, listing_id):
 
 
 def place_bid(request, listing_id):
-    suggested_price = int(request.POST.get('bid'))
+
     listing = Listing.objects.get(pk=listing_id)
     is_in_watchlist = request.user in listing.watchlist.all()
     is_it_owner = request.user == listing.owner or request.user.is_superuser
-    if suggested_price > listing.current_price:
-        your_bid = Bid(
-            user=request.user,
-            item=Listing.objects.get(pk=listing_id),
-            price=suggested_price
-        )
-        your_bid.save()
-        Listing.objects.filter(pk=listing_id).update(current_price=your_bid.price)
-        return HttpResponseRedirect(reverse("page", args=(listing_id, )))
-    else:
-        message = "Your bid must be larger than the current price"
+    try:
+        suggested_price = int(request.POST.get('bid'))
+        if suggested_price > listing.current_price:
+            your_bid = Bid(
+                user=request.user,
+                item=Listing.objects.get(pk=listing_id),
+                price=suggested_price
+            )
+            your_bid.save()
+            Listing.objects.filter(pk=listing_id).update(current_price=your_bid.price)
+            return HttpResponseRedirect(reverse("page", args=(listing_id, )))
+        else:
+            message = "Your bid must be larger than the current price"
+            return render(request, "auctions/listing_page.html", {
+                "item": listing,
+                "is_in_watchlist": is_in_watchlist,
+                "is_it_owner": is_it_owner,
+                "bid_message": message,
+                "bids_amount": len(Bid.objects.filter(item=listing_id)),
+                "message": message
+            })
+    except ValueError:
+        message = "Please define the correct price"
         return render(request, "auctions/listing_page.html", {
             "item": listing,
             "is_in_watchlist": is_in_watchlist,
             "is_it_owner": is_it_owner,
-            "bid_message": message,
+            "bid_message": "",
             "bids_amount": len(Bid.objects.filter(item=listing_id)),
+            'is_owner_to_close': request.user == listing.owner,
+            "message": message
         })
 
 
@@ -220,3 +235,16 @@ def close_auction(request, listing_id):
     Listing.objects.get(pk=listing_id).watchlist.clear()
     return HttpResponseRedirect(reverse("index"))
 
+
+def won(request):
+    items = Listing.objects.filter(winner=request.user.id)
+    return render(request, "auctions/wons_page.html", {
+        "items": items
+    })
+
+
+def your_item(request, title):
+    item = Listing.objects.get(title=title)
+    return render(request, "auctions/your_item.html", {
+        "item": item
+    })

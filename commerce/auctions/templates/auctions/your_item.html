@@ -1,0 +1,25 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block body %}
+    <h2>Listing: {{ item.title }}</h2>
+
+    <br>
+    <img class="image_on_listing_page" src="{{ item.image_URL }}">
+    <div style="margin-bottom: 10px">
+        <h6>{{ item.description }}</h6>
+    </div>
+    <button class="btn btn-info" type="button">Buy It Now</button>
+    <div style="margin-top: 15px"><h2><strong>${{ item.current_price }}</strong></h2></div>
+
+    <h2>Details</h2>
+        <ul>
+            <li>Listed by: {{ item.owner }}</li>
+            <li>Category: {{ item.category }}</li>
+        </ul>
+    <h2>Comments</h2>
+
+{% endblock %}
